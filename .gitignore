@@ -10,3 +10,4 @@ pom.xml.asc
 target
 out
 repl
+resources/js/typeshooter.js
