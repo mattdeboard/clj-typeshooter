@@ -6,23 +6,19 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :main clj-typeshooter.core
   :dependencies [[org.clojure/clojure "1.5.1"]
-                 [org.clojure/clojurescript "0.0-1889"]
-                 [cheshire "5.2.0"]
-                 [domina "1.0.0"]
-                 [org.clojure/google-closure-library-third-party "0.0-2029"]
+                 [org.clojure/core.async "0.1.222.0-83d0c2-alpha"]
+                 [prismatic/dommy "0.1.1"]
                  [com.cemerick/piggieback "0.1.0"]]
 
   :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
 
   :profiles {:uberjar {:aot :all}}
-  :eval-in-leiningen true
 
   :cljsbuild {:builds {:prod
                        {:source-paths ["src/cljs"]
                         :compiler
                         {:output-to "resources/js/typeshooter.js"
-                         :optimizations :advanced
-                         :pretty-print false
+                         :pretty-print true
                          :foreign-libs [{:file "resources/js/simpleGame.js"
                                          :provides ["simplegame"]}]}}}}
 
