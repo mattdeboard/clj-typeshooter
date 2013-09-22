@@ -1,43 +1,41 @@
 <!DOCTYPE HTML>
 <html lang="en-US">
-  <head>
-    <meta charset="UTF-8">
-    <title>TypeShooter</title>
-    <link href="http://fonts.googleapis.com/css?family=Orbitron:400,900"
-          rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
-    <script type="text/javascript" src="js/simpleGame.js"></script>
-    <script type="text/javascript" src="js/typeShooter.js"></script>
-    <style>
-      body {
-      font-family: 'Orbitron', sans-serif;
-      background-image: url('slash_it.png');
-      }
+    <head>
+        <meta charset="UTF-8">
+        <title>TypeShooter</title>
+        <link href="http://fonts.googleapis.com/css?family=Orbitron:400,900"
+              rel="stylesheet" type="text/css">
+        <style>
+            body {
+            font-family: 'Orbitron', sans-serif;
+            background-image: url('img/slash_it.png');
+            }
 
-      #description {
-      width: 225px;
-      background-color: white;
-      height: 840px;
-      position: absolute;
-      left: 180px;
-      top: 30px;
-      padding-left: 600px;
-      padding-right: 90px;
-      }
+            #description {
+            width: 225px;
+            background-color: white;
+            height: 840px;
+            position: absolute;
+            left: 180px;
+            top: 30px;
+            padding-left: 600px;
+            padding-right: 90px;
+            }
 
-    </style>
-  </head>
-  <body onload="init()">
-    <div id="description">
-      <h1>TypeShooter</h1>
-      <br />
-      <center>
-      <h2>How to Play:</h2>
-      <p><b>Type the words</b> to make as many aliens as you can blow up before the time runs out or you run out of lives!</p>
-      <p>Use the left and right button to evade them. </p>
+        </style>
+    </head>
+    <body>
+        <div id="description">
+            <h1>TypeShooter</h1>
+            <br />
+            <center>
+                <h2>How to Play:</h2>
+                <p><b>Type the words</b> to make as many aliens as you can blow up before the time runs out or you run out of lives!</p>
+                <p>Use the left and right button to evade them. </p>
 
-      <button onclick="loadElements();">Start Game</button>
-      </center>
-    </div>
-  </body>
+                <button id="start">Start Game</button>
+            </center>
+        </div>
+        <script type="text/javascript" src="js/typeshooter.js"></script>
+    </body>
 </html>
