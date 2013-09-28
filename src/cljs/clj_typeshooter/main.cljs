@@ -11,6 +11,8 @@
    [cljs.core.async.macros :as m :refer [go]]))
 
 (def rocket (atom {:state {:speed 0 :x-coord 250 :y-coord -850}}))
+(def max-speed 5)
+(def min-speed -5)
 (def game-state (atom {:active false}))
 (def start-loop-event (new js/CustomEvent "startloop"))
 
@@ -33,28 +35,33 @@
   (go
    (loop []
      (let [val (<! ch)]
+       (.log js/console (str "val: " val))
        (.start (:game @game-state) update)
        (swap! game-state #(assoc % :active true))
        (.dispatchEvent (sel1 :body) start-loop-event))
      (recur))))
+
+(defn update-canvas [ch]
+  (go
+   (while (<! ch)
+     (update))))
 
 (defn speedometer [ch]
   (go
    (while true
      (let [val (<! ch)
            sprite (:sprite @rocket)
-           speed (+ (.getSpeed sprite) val)
+           old-speed (.getSpeed sprite)
+           ;; Increase ship speed if it's less than `max-speed'
+           speed (if (or (and (< val 0)
+                              (<= old-speed min-speed))
+                         (and (> val 0)
+                              (>= old-speed max-speed)))
+                   old-speed
+                   (+ old-speed val))
            updater #(merge % {:speed speed})]
        (.setSpeed sprite speed)
        (swap! rocket updater)))))
-
-(defn update-loop [ch]
-  (go
-   (loop []
-     (let [val (<! ch)]
-       (if (= "start" val)
-         (update)
-         (recur))))))
 
 ;; chan producers
 (defn handle-speed [ch update-ch event]
