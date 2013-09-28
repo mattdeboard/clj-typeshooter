@@ -51,14 +51,7 @@
    (while true
      (let [val (<! ch)
            sprite (:sprite @rocket)
-           old-speed (.getSpeed sprite)
-           ;; Increase ship speed if it's less than `max-speed'
-           speed (if (or (and (< val 0)
-                              (<= old-speed min-speed))
-                         (and (> val 0)
-                              (>= old-speed max-speed)))
-                   old-speed
-                   (+ old-speed val))
+           speed (if (= val 1) max-speed min-speed)
            updater #(merge % {:speed speed})]
        (.setSpeed sprite speed)
        (swap! rocket updater)))))
@@ -66,8 +59,9 @@
 ;; chan producers
 (defn handle-speed [ch update-ch event]
   (let [code (.-keyCode event)]
-    (go-handle! update-ch
-                (cond (= code 37) (>! ch -1) (= code 39) (>! ch 1) :else nil))))
+    (cond (= code 37) (go-handle! update-ch (>! ch -1))
+          (= code 39) (go-handle! update-ch (>! ch 1))
+          :else nil)))
 
 (defn handle-start-click [ch update-ch event]
   (go-handle! update-ch (>! ch {:state 1})))
