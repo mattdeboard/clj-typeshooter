@@ -1,6 +1,7 @@
 (ns clj-typeshooter.main
- (:use-macros
-  [dommy.macros :only [sel sel1]])
+  (:use-macros
+   [clj-typeshooter.macros :only [go-handle!]]
+   [dommy.macros :only [sel sel1]])
   (:require
    [cljs.core.async :as async :refer [>! <! chan]]
    [clj-typeshooter.words :as words]
@@ -56,37 +57,20 @@
          (recur))))))
 
 ;; chan producers
-(defn adjust-speed [ch event]
+(defn handle-speed [ch update-ch event]
   (let [code (.-keyCode event)]
-    (go
-     (cond
-      (= code 37) (>! ch -1)
-      (= code 39) (>! ch 1)
-      :else nil))))
+    (go-handle! update-ch
+                (cond (= code 37) (>! ch -1) (= code 39) (>! ch 1) :else nil))))
 
-(defn start-click [ch event]
-  (go (>! ch {:state 1})))
-
-(defn update-ping [ch event]
-  (while (true? (:active @game-state))
-    (go (>! ch "start"))))
+(defn handle-start-click [ch update-ch event]
+  (go-handle! update-ch (>! ch {:state 1})))
 
 ;; chan definitions & signal bindings
-(defn speed-chan [elem event-type]
+(defn init-chan [elem event-type handler update-ch]
+  "Initialize channel for handling UI event `event-type' on DOM element `elem'
+to be handled by event-handler `handler'."
   (let [ch (chan)
-        f (partial adjust-speed ch)]
-    (dommy/listen! elem event-type f)
-    ch))
-
-(defn start-chan [elem event-type]
-  (let [ch (chan)
-        f (partial start-click ch)]
-    (dommy/listen! elem event-type f)
-    ch))
-
-(defn loop-chan [elem event-type]
-  (let [ch (chan)
-        f (partial update-ping ch)]
+        f (partial handler ch update-ch)]
     (dommy/listen! elem event-type f)
     ch))
 
@@ -100,13 +84,14 @@
     (swap! game-state #(assoc % :game game))))
 
 (defn main []
+  ;; Call `init' on once `window' is fully loaded.
   (dommy/listen! js/window :load init)
-  (let [accel-ch (speed-chan (sel1 :body) :keydown)
-        start-ch (start-chan (sel1 :button#start) :click)
-        loop-ch (loop-chan (sel1 :body) "startloop")]
-    (speedometer accel-ch)
-    (start-game start-ch)
-    (update-loop loop-ch)))
-
+  (let [update-chan (chan)
+        accel-chan (init-chan (sel1 :body) :keydown handle-speed update-chan)
+        start-chan (init-chan (sel1 :button#start) :click handle-start-click
+                              update-chan)]
+    (speedometer accel-chan)
+    (start-game start-chan)
+    (update-canvas update-chan)))
 
 (main)
