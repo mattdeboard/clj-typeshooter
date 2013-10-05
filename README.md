@@ -1,3 +1,5 @@
+[![Stories in Ready](https://badge.waffle.io/mattdeboard/clj-typeshooter.png)](http://waffle.io/mattdeboard/clj-typeshooter)
+
 # clj-typeshooter
 
 FIXME: description
