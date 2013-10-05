@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/mattdeboard/clj-typeshooter.png?label=ready)](https://waffle.io/mattdeboard/clj-typeshooter)  
 # clj-typeshooter
 
 FIXME: description
@@ -30,7 +31,7 @@ FIXME: listing of options this app accepts.
 
 ## License
 
-Copyright © 2013 FIXME
+Copyright B) 2013 FIXME
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
